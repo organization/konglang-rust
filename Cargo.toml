@@ -1,0 +1,12 @@
+[package]
+name = "konglang-rust"
+version = "0.1.0"
+authors = ["djdisodo <djdisodo@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+atoi = "0.3"
+dialoguer = "0.6.2"
+slice-deque = "0.3.0"
