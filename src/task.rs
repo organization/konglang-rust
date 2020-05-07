@@ -154,7 +154,7 @@ impl Task {
 					magic = true;
 				}
 				_ => {
-					return Err(format!("3unexpected character {} in {{}}", character));
+					return Err(format!("unexpected character {} in {{}}", character));
 				}
 			}
 			magic_expected = false;
