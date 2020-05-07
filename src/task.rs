@@ -1,16 +1,7 @@
-use std::collections::{HashMap, VecDeque};
-use std::io::{Bytes, Stdin, stdin, Read};
+use std::collections::HashMap;
+use std::io::{stdin, Read};
 use crate::task::Expression::{Receive, Send, ArithmeticExpression};
-use std::ops::{Index, Deref};
-use std::collections::btree_map::Range;
-use atoi::FromRadix10;
 use crate::task::ArithmeticOperation::{Add, Multiply, Sub, Div};
-use std::fmt::Error;
-use dialoguer::Input;
-use slice_deque::SliceDeque;
-use std::net::ToSocketAddrs;
-use std::thread::sleep;
-use std::time::Duration;
 
 pub struct Task {
 	pub memory: HashMap<u8, isize>,
@@ -27,7 +18,6 @@ impl Task {
 
 	pub fn parse(&self, position: &mut usize, closer: &Expression) -> Result<Option<isize>, String> {
 		let mut integer_expected = true;
-		let mut space_expected = true;
 		let mut magic_expected = true;
 		let mut magic = false;
 		let mut closer_expected = false;
@@ -91,7 +81,6 @@ impl Task {
 						}
 					}
 				};
-				space_expected = true;
 				operation_expected = false;
 				integer_expected = true;
 				//operation.apply(&mut val, FromRadix10::from_radix_10(line[start..(position - 1)].as_ref()));
@@ -180,8 +169,8 @@ impl Task {
 		}
 	}
 
+	#[allow(unused_assignments)]
 	pub fn eval(&mut self, position: &mut usize, use_closer: &bool) -> Result<isize, String> {
-		let mut line_number = 0;
 		let mut val: Option<isize> = Option::None;
 
 		let mut arithmetic_expression_expected = true;
@@ -263,7 +252,10 @@ impl Task {
 					while_expected = false;
 					if val.unwrap() != 0 {
 						let mut position_in_while: usize = *position;
-						self.eval(&mut position_in_while, &true);
+						match self.eval(&mut position_in_while, &true) {
+							Err(e) => return Err(e),
+							_ => {}
+						}
 						let mut parse_start = latest_parse_start;
 						while match self.parse_value(&mut parse_start, &ArithmeticExpression)  {
 							Ok(value) => {
@@ -272,7 +264,10 @@ impl Task {
 							Err(e) => return Err(e)
 						} != 0 {
 							position_in_while = *position;
-							self.eval(&mut position_in_while, &true);
+							match self.eval(&mut position_in_while, &true) {
+								Err(e) => return Err(e),
+								_ => {}
+							}
 							parse_start = latest_parse_start;
 						}
 						*position = position_in_while;
@@ -340,7 +335,10 @@ impl Task {
 
 	pub fn get_input() -> u8 {
 		let mut input: [u8; 1] = [0];
-		stdin().read(&mut input);
+		match stdin().read(&mut input) {
+			Err(e) => panic!(e),
+			_ => {}
+		}
 		if input[0].is_ascii_control() {
 			return Self::get_input();
 		}
