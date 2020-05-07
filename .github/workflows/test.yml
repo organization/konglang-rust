@@ -18,5 +18,4 @@ jobs:
           use-cross: true
           command: build
           args: --target armv7-unknown-linux-gnueabihf
-	run: target/debug/konglang-rust tests/hello_world.kong
-	run: target/debug/konglang-rust tests/while.kong
+	run: target/debug/konglang-rust tests/hello_world.kong && target/debug/konglang-rust tests/while.kong
